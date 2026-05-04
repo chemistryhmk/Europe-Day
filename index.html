@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europe Day Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0d0f1a;
+    min-height: 100vh;
+    font-family: 'Nunito Sans', sans-serif;
+    color: #f0f4ff;
+    background-image:
+      radial-gradient(1.5px 1.5px at 15% 20%, rgba(255,220,80,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 25%, rgba(255,220,80,0.5) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 85% 15%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 40%, rgba(255,220,80,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 25% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 70%, rgba(255,220,80,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 60% 85%, rgba(255,220,80,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 92%, rgba(255,255,255,0.3) 0%, transparent 100%);
+  }
+
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 36px 28px 48px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .header h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: #FFD740;
+    letter-spacing: 1px;
+  }
+
+  .header p {
+    font-size: 17px;
+    color: #8fa0cc;
+    margin-top: 6px;
+  }
+
+  .letter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .letter-cell {
+    width: 58px;
+    height: 68px;
+    border-radius: 12px;
+    border: 2.5px solid #2a3050;
+    background: #141628;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+  }
+
+  .letter-cell.revealed {
+    background: #1e2a60;
+    border-color: #FFD740;
+  }
+
+  .letter-cell .ltr {
+    font-family: 'Nunito', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    color: #FFD740;
+    line-height: 1;
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .letter-cell.revealed .ltr { opacity: 1; transform: scale(1); }
+
+  .letter-cell .idx {
+    font-size: 11px;
+    color: #4a5680;
+    margin-top: 3px;
+  }
+
+  .letter-cell.revealed .idx { color: #8fa0cc; }
+
+  .space-cell {
+    width: 20px;
+    height: 68px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+  }
+
+  .space-cell span { font-size: 12px; color: #3a4265; }
+
+  .question-card {
+    background: #141628;
+    border: 2px solid #2a3050;
+    border-radius: 20px;
+    padding: 32px 28px;
+  }
+
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .q-num {
+    background: #FFD740;
+    color: #0d0f1a;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .q-unlock {
+    font-size: 14px;
+    color: #8fa0cc;
+    background: #1e2a60;
+    border-radius: 8px;
+    padding: 5px 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .q-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e8f0ff;
+    line-height: 1.4;
+    margin-bottom: 22px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .opt-btn {
+    background: #1a1e35;
+    border: 2px solid #2a3050;
+    border-radius: 14px;
+    padding: 16px 22px;
+    text-align: left;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: #c8d4f5;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .opt-btn:hover:not(:disabled) {
+    background: #1e2a60;
+    border-color: #4a6af0;
+    color: #fff;
+  }
+
+  .opt-btn .opt-label {
+    background: #2a3050;
+    color: #8fa0cc;
+    font-size: 15px;
+    font-weight: 900;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .opt-btn:hover:not(:disabled) .opt-label {
+    background: #4a6af0;
+    color: #fff;
+  }
+
+  .opt-btn.correct {
+    background: #0f3320;
+    border-color: #2ecc71;
+    color: #7aff9e;
+    cursor: default;
+  }
+
+  .opt-btn.correct .opt-label { background: #2ecc71; color: #0f3320; }
+
+  .opt-btn.wrong {
+    background: #2a0f0f;
+    border-color: #e74c3c;
+    color: #ff9090;
+    cursor: default;
+  }
+
+  .opt-btn.wrong .opt-label { background: #e74c3c; color: #fff; }
+
+  .opt-btn:disabled { cursor: default; }
+
+  .feedback-msg {
+    margin-top: 16px;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 19px;
+    font-weight: 700;
+    display: none;
+  }
+
+  .feedback-msg.show { display: block; }
+
+  .feedback-msg.ok {
+    background: #0f3320;
+    color: #7aff9e;
+    border: 1.5px solid #2ecc71;
+  }
+
+  .feedback-msg.no {
+    background: #2a0f0f;
+    color: #ff9090;
+    border: 1.5px solid #e74c3c;
+  }
+
+  .next-btn {
+    margin-top: 18px;
+    width: 100%;
+    background: #FFD740;
+    color: #0d0f1a;
+    border: none;
+    border-radius: 14px;
+    padding: 18px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    cursor: pointer;
+    display: none;
+    transition: background 0.15s;
+    letter-spacing: 0.5px;
+  }
+
+  .next-btn:hover { background: #ffe166; }
+  .next-btn.show { display: block; }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .prog-dot {
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: #2a3050;
+    transition: background 0.3s;
+    flex-shrink: 0;
+  }
+
+  .prog-dot.done { background: #FFD740; }
+  .prog-dot.current { background: #4a6af0; }
+
+  .prog-label {
+    font-size: 15px;
+    color: #5a6890;
+    margin-left: 4px;
+  }
+
+  .final-screen {
+    text-align: center;
+    padding: 40px 10px;
+    display: none;
+  }
+
+  .final-screen.show { display: block; }
+
+  .final-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: #FFD740;
+    margin-bottom: 14px;
+  }
+
+  .final-sub {
+    font-size: 22px;
+    color: #c8d4f5;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .big-word {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 68px;
+    letter-spacing: 10px;
+    color: #FFD740;
+    margin: 20px 0;
+  }
+
+  .eu-flag { font-size: 64px; margin-bottom: 12px; }
+
+  .score-badge {
+    display: inline-block;
+    background: #1e2a60;
+    border: 1.5px solid #4a6af0;
+    border-radius: 20px;
+    padding: 8px 24px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #8fa0cc;
+  }
+
+  .restart-btn {
+    background: transparent;
+    border: 2.5px solid #FFD740;
+    color: #FFD740;
+    border-radius: 14px;
+    padding: 16px 36px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    cursor: pointer;
+    margin-top: 24px;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+
+  .restart-btn:hover { background: #FFD740; color: #0d0f1a; }
+</style>
+</head>
+<body>
+<div class="content">
+  <div class="header">
+    <h1>🌍 EUROPE DAY QUEST</h1>
+    <p>Відповідай правильно — збирай літери!</p>
+  </div>
+
+  <div class="letter-bar" id="letter-bar"></div>
+  <div class="progress-row" id="progress-row"></div>
+
+  <div id="question-area">
+    <div class="question-card">
+      <div class="q-meta">
+        <div class="q-num" id="q-num">1</div>
+        <div class="q-unlock" id="q-unlock">ВІДКРИВАЄ: E</div>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback-msg" id="feedback"></div>
+      <button class="next-btn" id="next-btn">Наступне питання →</button>
+    </div>
+  </div>
+
+  <div class="final-screen" id="final-screen">
+    <div class="eu-flag">🇪🇺</div>
+    <div class="final-title">Вітаємо!</div>
+    <div class="final-sub">Ти зібрав усі літери і відкрив секретне слово!</div>
+    <div class="big-word">EUROPE DAY</div>
+    <div class="score-badge" id="score-badge"></div>
+    <br>
+    <div style="font-size:18px; color:#8fa0cc; margin-top:12px; line-height:1.7;">
+      9 травня — День Європи.<br>Єдність у різноманітті!
+    </div>
+    <button class="restart-btn" onclick="restart()">Грати знову</button>
+  </div>
+</div>
+
+<script>
+const WORD = "EUROPE DAY";
+const LETTERS = WORD.split('');
+
+const questions = [
+  { q: '«День Європи» перекладається англійською мовою як?', opts: ['A) Europe Day', 'B) Europe Party', 'C) Europe School'], correct: 0 },
+  { q: 'Коли відзначають «День Європи»?', opts: ['A) March 8', 'B) May 9', 'C) December 31'], correct: 1 },
+  { q: 'З якої країни Pizza?', opts: ['A) Germany', 'B) Italy', 'C) France'], correct: 1 },
+  { q: 'Pretzel — це…', opts: ['A) Крендель з Німеччини', 'B) Іграшка з Франції', 'C) Напій з Іспанії'], correct: 0 },
+  { q: 'Смачна їжа з Франції — це…', opts: ['A) Croissant', 'B) Pretzel', 'C) Pasta'], correct: 0 },
+  { q: 'Скільки зірок на прапорі Європейського союзу?', opts: ['A) 5', 'B) 10', 'C) 12'], correct: 2 },
+  { q: 'Обери девіз Європейського союзу:', opts: ['A) «Be happy»', 'B) «United in diversity»', 'C) «Big and strong»'], correct: 1 },
+  { q: 'Як в Італії кажуть «Привіт»?', opts: ['A) Ciao!', 'B) Hello!', 'C) Hola!'], correct: 0 },
+  { q: 'В якому місті знаходиться Біг Бен?', opts: ['A) London', 'B) Paris', 'C) Rome'], correct: 0 }
+];
+
+let current = 0, revealed = [], score = 0, answered = false;
+
+function buildLetterBar() {
+  const bar = document.getElementById('letter-bar');
+  bar.innerHTML = '';
+  let qIdx = 0;
+  for (let i = 0; i < LETTERS.length; i++) {
+    if (LETTERS[i] === ' ') {
+      const sp = document.createElement('div');
+      sp.className = 'space-cell';
+      sp.innerHTML = '<span>_</span>';
+      bar.appendChild(sp);
+    } else {
+      const cell = document.createElement('div');
+      cell.className = 'letter-cell' + (revealed.includes(qIdx) ? ' revealed' : '');
+      cell.id = 'cell-' + qIdx;
+      cell.innerHTML = '<div class="ltr">' + LETTERS[i] + '</div><div class="idx">' + (qIdx+1) + '</div>';
+      bar.appendChild(cell);
+      qIdx++;
+    }
+  }
+}
+
+function buildProgress() {
+  const row = document.getElementById('progress-row');
+  row.innerHTML = '';
+  for (let i = 0; i < questions.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'prog-dot' + (i < current ? ' done' : (i === current ? ' current' : ''));
+    row.appendChild(dot);
+  }
+  const lbl = document.createElement('div');
+  lbl.className = 'prog-label';
+  lbl.textContent = (current + 1) + ' / ' + questions.length;
+  row.appendChild(lbl);
+}
+
+function getLetter(qIdx) {
+  let count = 0;
+  for (let i = 0; i < LETTERS.length; i++) {
+    if (LETTERS[i] === ' ') continue;
+    if (count === qIdx) return LETTERS[i];
+    count++;
+  }
+  return '?';
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('q-num').textContent = current + 1;
+  document.getElementById('q-unlock').textContent = 'ВІДКРИВАЄ: ' + getLetter(current);
+  document.getElementById('q-text').textContent = q.q;
+  answered = false;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const labels = ['A', 'B', 'C'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    const text = opt.replace(/^[ABC]\)\s*/, '');
+    btn.innerHTML = '<div class="opt-label">' + labels[i] + '</div><span>' + text + '</span>';
+    btn.onclick = () => handleAnswer(i);
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('feedback').className = 'feedback-msg';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('next-btn').className = 'next-btn';
+  buildProgress();
+}
+
+function handleAnswer(chosen) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const btns = document.querySelectorAll('.opt-btn');
+  const fb = document.getElementById('feedback');
+
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add('correct');
+    else if (i === chosen) btn.classList.add('wrong');
+  });
+
+  if (chosen === q.correct) {
+    score++;
+    revealed.push(current);
+    fb.textContent = '✅ Правильно! Літера «' + getLetter(current) + '» відкрита!';
+    fb.className = 'feedback-msg show ok';
+    setTimeout(() => {
+      const cell = document.getElementById('cell-' + current);
+      if (cell) cell.classList.add('revealed');
+    }, 300);
+  } else {
+    fb.textContent = '❌ Не вірно! Правильна відповідь виділена.';
+    fb.className = 'feedback-msg show no';
+  }
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) showFinal();
+  else renderQuestion();
+}
+
+function showFinal() {
+  document.getElementById('question-area').style.display = 'none';
+  document.getElementById('progress-row').style.display = 'none';
+  buildLetterBar();
+  document.getElementById('final-screen').className = 'final-screen show';
+  document.getElementById('score-badge').textContent = 'Результат: ' + score + ' / ' + questions.length;
+}
+
+function restart() {
+  current = 0; revealed = []; score = 0; answered = false;
+  document.getElementById('question-area').style.display = 'block';
+  document.getElementById('progress-row').style.display = 'flex';
+  document.getElementById('final-screen').className = 'final-screen';
+  buildLetterBar();
+  renderQuestion();
+}
+
+document.getElementById('next-btn').onclick = nextQuestion;
+buildLetterBar();
+renderQuestion();
+</script>
+</body>
+</html>
